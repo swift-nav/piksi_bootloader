@@ -1,9 +1,10 @@
-piksi_firmware
+piksi_bootloader
 ==============
 
-Firmware for the Swift Navigation Piksi GPS Receiver.
+Bootloader for the Swift Navigation Piksi GNSS Receiver.
 
-Documentation available online at http://docs.swift-nav.com/piksi_firmware
+Use piksi_firmware/scripts/bootload.py to update Piksi's firmware, available
+  at https://github.com/swift-nav/piksi_firmware
 
 For toolchain installation, see
   http://docs.swift-nav.com/wiki/Piksi_Developer_Getting_Started_Guide
