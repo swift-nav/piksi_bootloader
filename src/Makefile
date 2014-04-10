@@ -1,6 +1,6 @@
-BINARY = piksi_firmware
+BINARY = bootloader
 
-OBJS = main.o
+OBJS = bootloader.o
 
 include ../stm32/Makefile.include
 
