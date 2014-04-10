@@ -1,7 +1,7 @@
 piksi_bootloader
-==============
+================
 
-Bootloader for the Swift Navigation Piksi GNSS Receiver.
+Bootloader for the Swift Navigation Piksi GNSS Receiver
 
 Use piksi_firmware/scripts/bootload.py to update Piksi's firmware, available
   at https://github.com/swift-nav/piksi_firmware
