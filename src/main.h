@@ -13,9 +13,12 @@
 #ifndef SWIFTNAV_MAIN_H
 #define SWIFTNAV_MAIN_H
 
+#include <libopencm3/stm32/f4/rcc.h>
 #include <libswiftnav/common.h>
 
-#define SAMPLE_FREQ 16368000
+extern const clock_scale_t hse_16_368MHz_in_65_472MHz_out_3v3;
+extern const clock_scale_t hse_16_368MHz_in_130_944MHz_out_3v3;
+extern const clock_scale_t hse_16_368MHz_in_120_203MHz_out_3v3;
 
 /* See http://c-faq.com/cpp/multistmt.html for
  * and explaination of the do {} while(0)

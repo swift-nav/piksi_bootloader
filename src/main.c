@@ -18,6 +18,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <libopencm3/cm3/scb.h>
 #include <libswiftnav/sbp.h>
 
@@ -31,9 +32,9 @@
 #define APP_ADDRESS   0x08004000
 #define STACK_ADDRESS 0x10010000
 
-u8 bootloader_version = 0;
 u8 host_wants_bootload = 0;
 u8 current_app_valid = 0;
+const char git_commit[] = GIT_COMMIT;
 
 /* Swap printf calls for this function at link time to save memory in the
  * bootloader (-Wl,-wrap,printf in linker flags).
@@ -71,7 +72,8 @@ void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[])
 
 u32 send_handshake(void)
 {
-  return sbp_send_msg(MSG_BOOTLOADER_HANDSHAKE, 1, &bootloader_version);
+  return sbp_send_msg(MSG_BOOTLOADER_HANDSHAKE, strlen(git_commit),
+                      (u8 *)git_commit);
 }
 
 int main(void)

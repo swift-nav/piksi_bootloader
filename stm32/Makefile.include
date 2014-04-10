@@ -16,7 +16,7 @@
 
 SWIFTNAV_ROOT ?= ..
 PREFIX ?= arm-none-eabi
-GIT_VERSION := $(shell git describe)
+GIT_COMMIT := $(shell git describe)
 # PREFIX ?= arm-elf
 CC = $(PREFIX)-gcc
 LD = $(PREFIX)-gcc
@@ -39,7 +39,7 @@ OBJS += \
 
 CFLAGS += -Os -Wall -Wextra -Werror -std=gnu99 \
 			    -fdata-sections -ffunction-sections \
-			    -fno-common -MD -DSTM32F4 -DGIT_VERSION="\"$(GIT_VERSION)\"" \
+			    -fno-common -MD -DSTM32F4 -DGIT_COMMIT="\"$(GIT_COMMIT)\"" \
 			    -mcpu=cortex-m4 -march=armv7e-m -mthumb \
 			    -mfloat-abi=hard -mfpu=fpv4-sp-d16
 

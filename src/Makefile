@@ -1,6 +1,6 @@
 BINARY = bootloader
 
-OBJS = bootloader.o
+OBJS = main.o
 
 include ../stm32/Makefile.include
 
