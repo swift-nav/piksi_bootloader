@@ -72,8 +72,7 @@ void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[])
   if (sender_id != 0)
     return;
 
-  /* Disable FPGA configuration and set up SPI in case we want to flash M25. */
-  spi_setup();
+  /* Register flash callbacks. */
   flash_callbacks_register();
   host_wants_bootload = 1;
 }
@@ -94,6 +93,9 @@ int main(void)
   led_setup();
   led_off(LED_GREEN);
   led_off(LED_RED);
+
+  /* Set up SPI. */
+  spi_setup();
 
   /* Setup UART and SBP interface for transmitting and receiving callbacks. */
   static s32 serial_number;
