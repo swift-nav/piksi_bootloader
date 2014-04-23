@@ -19,10 +19,8 @@
 #include <libswiftnav/constants.h>
 
 #include "../m25_flash.h"
-#include "acq_channel.h"
 #include "nap_conf.h"
 #include "nap_common.h"
-#include "track_channel.h"
 
 /** \addtogroup nap
  * \{ */
@@ -30,28 +28,6 @@
 /** \defgroup conf Configuration
  * Functions to get information about the SwiftNAP configuration.
  * \{ */
-
-/** Get NAP configuration parameters from FPGA configuration flash.
- * Gets information about the NAP configuration (number of code phase taps in
- * the acquisition channel, number of tracking channels, etc).
- */
-void nap_conf_rd_parameters(void)
-{
-  /* Define parameters that need to be read from FPGA configuration flash.
-   * Pointers in the array should be in the same order they're stored in the
-   * configuration flash. */
-  u8 * nap_parameters[2] = {
-    &nap_acq_n_taps,
-    &nap_track_n_channels
-  };
-
-  /* Get parameters from FPGA configuration flash */
-  for (u8 i = 0; i < (sizeof(nap_parameters) / sizeof(nap_parameters[0])); i++)
-    m25_read(NAP_FLASH_PARAMS_ADDR + i, nap_parameters[i], 1);
-
-  /* Bound number of channels with used by libswiftnav MAX_CHANNELS parameter. */
-  nap_track_n_channels = MIN(nap_track_n_channels, MAX_CHANNELS);
-}
 
 /** Return version string from NAP configuration build.
  *
