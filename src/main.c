@@ -66,10 +66,10 @@ void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[])
   (void)len; (void)msg;
 
   /*
-   * Piksi Console uses sender_id == 0. If we receive
-   * this message from another Piksi, ignore it.
+   * Piksi Console uses sender_id == 42. If we receive
+   * this message from a sender whose ID is not 42, ignore it.
    */
-  if (sender_id != 0)
+  if (sender_id != 42)
     return;
 
   /* Register flash callbacks. */
