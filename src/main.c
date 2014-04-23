@@ -27,6 +27,7 @@
 #include "board/leds.h"
 #include "peripherals/spi.h"
 #include "board/nap/nap_common.h"
+#include "board/nap/nap_conf.h"
 #include "flash_callbacks.h"
 
 #define APP_ADDRESS   0x08004000
@@ -64,7 +65,7 @@ void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[])
 {
   (void)len; (void)msg;
 
-  /* 
+  /*
    * Piksi Console uses sender_id == 0. If we receive
    * this message from another Piksi, ignore it.
    */
@@ -95,7 +96,9 @@ int main(void)
   led_off(LED_RED);
 
   /* Setup UART and SBP interface for transmitting and receiving callbacks. */
-  sbp_setup(0, 0);
+  static s32 serial_number;
+  serial_number = nap_conf_rd_serial_number();
+  sbp_setup(0, serial_number);
 
   /* Add callback for jumping to application after bootloading is finished. */
   static sbp_msg_callbacks_node_t jump_to_app_node;
