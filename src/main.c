@@ -62,7 +62,14 @@ void jump_to_app_callback(u16 sender_id, u8 len, u8 msg[])
 
 void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[])
 {
-  (void)sender_id; (void)len; (void)msg;
+  (void)len; (void)msg;
+
+  /* 
+   * Piksi Console uses sender_id == 0. If we receive
+   * this message from another Piksi, ignore it.
+   */
+  if (sender_id != 0)
+    return;
 
   /* Disable FPGA configuration and set up SPI in case we want to flash M25. */
   spi_setup();
