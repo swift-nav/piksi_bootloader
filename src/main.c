@@ -27,6 +27,7 @@
 #include "board/leds.h"
 #include "peripherals/spi.h"
 #include "board/nap/nap_common.h"
+#include "board/nap/nap_conf.h"
 #include "flash_callbacks.h"
 
 #define APP_ADDRESS   0x08004000
@@ -62,10 +63,16 @@ void jump_to_app_callback(u16 sender_id, u8 len, u8 msg[])
 
 void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[])
 {
-  (void)sender_id; (void)len; (void)msg;
+  (void)len; (void)msg;
 
-  /* Disable FPGA configuration and set up SPI in case we want to flash M25. */
-  spi_setup();
+  /*
+   * Piksi Console uses sender_id == 0x42. If we receive
+   * this message from a sender whose ID is not 0x42, ignore it.
+   */
+  if (sender_id != 0x42)
+    return;
+
+  /* Register flash callbacks. */
   flash_callbacks_register();
   host_wants_bootload = 1;
 }
@@ -87,8 +94,13 @@ int main(void)
   led_off(LED_GREEN);
   led_off(LED_RED);
 
+  /* Set up SPI. */
+  spi_setup();
+
   /* Setup UART and SBP interface for transmitting and receiving callbacks. */
-  sbp_setup(0, 0);
+  static s32 serial_number;
+  serial_number = nap_conf_rd_serial_number();
+  sbp_setup(0, serial_number);
 
   /* Add callback for jumping to application after bootloading is finished. */
   static sbp_msg_callbacks_node_t jump_to_app_node;

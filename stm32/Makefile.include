@@ -16,7 +16,7 @@
 
 SWIFTNAV_ROOT ?= ..
 PREFIX ?= arm-none-eabi
-GIT_COMMIT := $(shell git describe)
+GIT_COMMIT := $(shell git describe --dirty)
 # PREFIX ?= arm-elf
 CC = $(PREFIX)-gcc
 LD = $(PREFIX)-gcc
@@ -25,6 +25,7 @@ OBJDUMP = $(PREFIX)-objdump
 
 OBJS += \
 	$(SWIFTNAV_ROOT)/src/board/nap/nap_common.o \
+	$(SWIFTNAV_ROOT)/src/board/nap/nap_conf.o \
 	$(SWIFTNAV_ROOT)/src/board/m25_flash.o \
 	$(SWIFTNAV_ROOT)/src/board/leds.o \
 	$(SWIFTNAV_ROOT)/src/peripherals/stm_flash.o \
