@@ -31,6 +31,9 @@ void flash_erase_sector_callback(u16 sender_id, u8 len, u8 msg[])
 {
   (void)sender_id; (void)len;
 
+  if (sender_id != 0x42)
+    return;
+
   u8 ret;
   u8 flash = msg[0];
   u8 sector = msg[1];
@@ -71,6 +74,9 @@ void flash_erase_sector_callback(u16 sender_id, u8 len, u8 msg[])
 void flash_program_callback(u16 sender_id, u8 len, u8 msg[])
 {
   (void)sender_id; (void)len;
+
+  if (sender_id != 0x42)
+    return;
 
   u8 ret = FLASH_OK;
   u8 flash = msg[0];
@@ -116,6 +122,9 @@ void flash_program_callback(u16 sender_id, u8 len, u8 msg[])
 void flash_read_callback(u16 sender_id, u8 len, u8 msg[])
 {
   (void)sender_id; (void)len;
+
+  if (sender_id != 0x42)
+    return;
 
   u8 ret = FLASH_OK;
   u8 flash = msg[0];
@@ -172,6 +181,9 @@ void m25_flash_write_status_callback(u16 sender_id, u8 len, u8 msg[])
 {
   (void)sender_id; (void)len;
 
+  if (sender_id != 0x42)
+    return;
+
   u8 ret = FLASH_OK;
   u8 sr = msg[0];
   m25_write_enable();
@@ -190,6 +202,9 @@ void stm_flash_unlock_sector_callback(u16 sender_id, u8 len, u8 msg[])
 {
   (void)sender_id; (void)len;
 
+  if (sender_id != 0x42)
+    return;
+
   u8 ret;
   u8 sector = msg[0];
   ret = stm_flash_unlock_sector(sector);
@@ -205,6 +220,9 @@ void stm_flash_unlock_sector_callback(u16 sender_id, u8 len, u8 msg[])
 void stm_flash_lock_sector_callback(u16 sender_id, u8 len, u8 msg[])
 {
   (void)sender_id; (void)len;
+
+  if (sender_id != 0x42)
+    return;
 
   u8 ret;
   u8 sector = msg[0];
