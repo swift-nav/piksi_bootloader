@@ -16,8 +16,6 @@
 #include <string.h>
 
 #include <libsbp/logging.h>
-#include <libswiftnav/edc.h>
-#include <libswiftnav/sbp.h>
 
 #include "board/leds.h"
 #include "peripherals/usart.h"
@@ -32,8 +30,9 @@
  * Last resort, low-level, blocking, continuous error messages.
  * \{ */
 
-u32 fallback_write(u8 *buff, u32 n)
+u32 fallback_write(u8 *buff, u32 n, void *context)
 {
+  (void)context;
   for (u8 i=0; i<n; i++) {
     while (!(USART6_SR & USART_SR_TXE));
     USART6_DR = buff[i];
@@ -65,7 +64,9 @@ void screaming_death(char *msg)
 
   /* Continuously send error message */
   while (1) {
+    /* TODO: what do we do here?
     sbp_send_message(SBP_MSG_PRINT, 0, len, (u8*)err_msg, &fallback_write);
+    */
     led_toggle(LED_RED);
     for (u32 d = 0; d < 5000000; d++)
       __asm__("nop");

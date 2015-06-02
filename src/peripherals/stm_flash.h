@@ -13,7 +13,7 @@
 #ifndef SWIFTNAV_STM_FLASH_H
 #define SWIFTNAV_STM_FLASH_H
 
-#include <libswiftnav/common.h>
+#include <libsbp/common.h>
 
 /** \addtogroup stm_flash
  * \{ */

@@ -13,7 +13,7 @@
 #ifndef SWIFTNAV_MAX2769_H
 #define SWIFTNAV_MAX2769_H
 
-#include <libswiftnav/common.h>
+#include <libsbp/common.h>
 
 /** \addtogroup max
  * \{ */

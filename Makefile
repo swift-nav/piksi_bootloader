@@ -12,11 +12,11 @@ ifneq (,$(findstring W32,$(shell uname)))
 	CMAKEFLAGS += -G "MSYS Makefiles"
 endif
 
-.PHONY: all bootloader libopencm3 libswiftnav
+.PHONY: all bootloader libopencm3 libsbp
 
 all: bootloader
 
-bootloader: libopencm3 libswiftnav
+bootloader: libopencm3 libsbp
 	@printf "BUILD   bootloader\n"; \
 	$(MAKE) -C src $(MAKEFLAGS)
 	@mv src/bootloader.elf ./
@@ -26,11 +26,11 @@ libopencm3:
 	@printf "BUILD   libopencm3\n"; \
 	$(MAKE) -C libopencm3 $(MAKEFLAGS) lib/stm32/f4
 
-libswiftnav:
-	@printf "BUILD   libswiftnav\n"; \
-	mkdir -p libswiftnav/build; cd libswiftnav/build; \
+libsbp:
+	@printf "BUILD   libsbp\n"; \
+	mkdir -p libsbp/c/build; cd libsbp/c/build; \
 	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-gcc-arm-embedded.cmake $(CMAKEFLAGS) ../
-	$(MAKE) -C libswiftnav/build $(MAKEFLAGS)
+	$(MAKE) -C libsbp/c/build $(MAKEFLAGS)
 
 clean:
 	@printf "CLEAN   src\n"; \
@@ -39,6 +39,8 @@ clean:
 	$(MAKE) -C libopencm3 $(MAKEFLAGS) clean
 	@printf "CLEAN   libswiftnav\n"; \
 	$(RM) -rf libswiftnav/build
+	@printf "CLEAN   libsbp\n"; \
+	$(RM) -rf libsbp/c/build
 	@printf "CLEAN   bootloader\n"; \
 	$(RM) -f bootloader.elf \
 	$(RM) -f bootloader.hex

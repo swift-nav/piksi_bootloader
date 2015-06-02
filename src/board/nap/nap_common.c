@@ -14,7 +14,6 @@
 #include <libopencm3/stm32/f4/gpio.h>
 #include <libopencm3/stm32/f4/rcc.h>
 #include <libsbp/bootload.h>
-#include <libswiftnav/sbp.h>
 
 #include "../../error.h"
 #include "../../peripherals/spi.h"
@@ -164,9 +163,9 @@ void nap_rd_dna(u8 dna[])
  *
  * \param buff Unused argument, callback takes no input.
  */
-void nap_rd_dna_callback(u16 sender_id, u8 len, u8 msg[])
+void nap_rd_dna_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 {
-  (void)sender_id; (void)len; (void)msg;
+  (void)sender_id; (void)len; (void)msg; (void)context;
   u8 dna[8];
   nap_rd_dna(dna);
   sbp_send_msg(SBP_MSG_NAP_DEVICE_DNA_DEVICE, 8, dna);
@@ -177,8 +176,8 @@ void nap_callbacks_setup(void)
 {
   static sbp_msg_callbacks_node_t nap_dna_node;
 
-  sbp_register_callback(SBP_MSG_NAP_DEVICE_DNA_HOST, &nap_rd_dna_callback,
-                        &nap_dna_node);
+  sbp_register_cbk(SBP_MSG_NAP_DEVICE_DNA_HOST, &nap_rd_dna_callback,
+                   &nap_dna_node);
 }
 
 /** Do an SPI transfer to/from one of the NAP's internal registers.

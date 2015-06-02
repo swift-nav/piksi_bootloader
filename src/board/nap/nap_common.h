@@ -14,7 +14,7 @@
 #ifndef SWIFTNAV_NAP_COMMON_H
 #define SWIFTNAV_NAP_COMMON_H
 
-#include <libswiftnav/common.h>
+#include <libsbp/common.h>
 
 /** \addtogroup nap
  * \{ */
