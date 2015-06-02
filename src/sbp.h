@@ -17,7 +17,6 @@
 #include <libswiftnav/sbp_messages.h>
 
 #include "peripherals/usart.h"
-#include "sbp_piksi.h"
 
 void sbp_setup(u8 use_settings, u16 sender_id);
 void sbp_disable(void);

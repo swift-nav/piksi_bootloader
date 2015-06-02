@@ -46,7 +46,8 @@ CFLAGS += -Os -Wall -Wextra -Werror -std=gnu99 \
 
 CFLAGS += -I$(SWIFTNAV_ROOT)/src \
           -I$(SWIFTNAV_ROOT)/libopencm3/include \
-          -I$(SWIFTNAV_ROOT)/libswiftnav/include
+          -I$(SWIFTNAV_ROOT)/libswiftnav/include \
+          -I$(SWIFTNAV_ROOT)/libsbp/c/include
 
 LDSCRIPT ?= $(SWIFTNAV_ROOT)/stm32/bootloader.ld
 LDFLAGS += -lc -lnosys -T$(LDSCRIPT) -nostartfiles \

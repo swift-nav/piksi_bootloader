@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <libsbp/logging.h>
 #include <libswiftnav/edc.h>
 #include <libswiftnav/sbp.h>
 
@@ -64,7 +65,7 @@ void screaming_death(char *msg)
 
   /* Continuously send error message */
   while (1) {
-    sbp_send_message(MSG_PRINT, 0, len, (u8*)err_msg, &fallback_write);
+    sbp_send_message(SBP_MSG_PRINT, 0, len, (u8*)err_msg, &fallback_write);
     led_toggle(LED_RED);
     for (u32 d = 0; d < 5000000; d++)
       __asm__("nop");

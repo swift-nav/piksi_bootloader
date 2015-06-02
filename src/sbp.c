@@ -18,6 +18,7 @@
 #include <libopencm3/stm32/f4/dma.h>
 #include <libopencm3/stm32/f4/usart.h>
 
+#include <libsbp/logging.h>
 #include <libswiftnav/edc.h>
 #include <libswiftnav/sbp.h>
 
@@ -183,7 +184,7 @@ int _write(int file, char *ptr, int len)
   switch (file) {
   case 1:
     if (len > 255) len = 255;   /* Send maximum of 255 chars at a time */
-    sbp_send_msg(MSG_PRINT, len, (u8 *)ptr);
+    sbp_send_msg(SBP_MSG_PRINT, len, (u8 *)ptr);
     return len;
 
   case 22:
@@ -203,7 +204,7 @@ void debug_variable(char *name, double x)
   u8* buff = malloc(sl + sizeof(double));
   memcpy(buff, &x, sizeof(double));
   memcpy(&buff[8], name, sl);
-  sbp_send_msg(MSG_DEBUG_VAR, sl + sizeof(double), buff);
+  sbp_send_msg(SBP_MSG_DEBUG_VAR, sl + sizeof(double), buff);
   free(buff);
 }
 

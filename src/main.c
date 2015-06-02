@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <libopencm3/cm3/scb.h>
+#include <libsbp/bootload.h>
 #include <libswiftnav/sbp.h>
 
 #include "main.h"
@@ -79,7 +80,7 @@ void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[])
 
 u32 send_handshake(void)
 {
-  return sbp_send_msg(MSG_BOOTLOADER_HANDSHAKE, strlen(git_commit),
+  return sbp_send_msg(SBP_MSG_BOOTLOADER_HANDSHAKE_DEVICE, strlen(git_commit),
                       (u8 *)git_commit);
 }
 
@@ -104,12 +105,12 @@ int main(void)
 
   /* Add callback for jumping to application after bootloading is finished. */
   static sbp_msg_callbacks_node_t jump_to_app_node;
-  sbp_register_callback(MSG_BOOTLOADER_JUMP_TO_APP, &jump_to_app_callback,
+  sbp_register_callback(SBP_MSG_BOOTLOADER_JUMP_TO_APP, &jump_to_app_callback,
                         &jump_to_app_node);
 
   /* Add callback for host to tell bootloader it wants to load program. */
   static sbp_msg_callbacks_node_t receive_handshake_node;
-  sbp_register_callback(MSG_BOOTLOADER_HANDSHAKE,&receive_handshake_callback,
+  sbp_register_callback(SBP_MSG_BOOTLOADER_HANDSHAKE_HOST,&receive_handshake_callback,
                         &receive_handshake_node);
 
   /* Is current application we have in flash valid? Check this by seeing if
