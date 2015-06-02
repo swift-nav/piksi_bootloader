@@ -1,9 +1,6 @@
 [submodule "libopencm3"]
 	path = libopencm3
 	url = https://github.com/libopencm3/libopencm3.git
-[submodule "libswiftnav"]
-	path = libswiftnav
-	url = https://github.com/swift-nav/libswiftnav.git
 [submodule "libsbp"]
 	path = libsbp
 	url = git@github.com:swift-nav/libsbp.git
