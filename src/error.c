@@ -62,11 +62,12 @@ void screaming_death(char *msg)
   err_msg[len++] = '\n';
   err_msg[len++] = 0;
 
+  static sbp_state_t err_sbp_state;
+  sbp_state_init(&err_sbp_state);
+
   /* Continuously send error message */
   while (1) {
-    /* TODO: what do we do here?
-    sbp_send_message(SBP_MSG_PRINT, 0, len, (u8*)err_msg, &fallback_write);
-    */
+    sbp_send_message(&err_sbp_state, SBP_MSG_PRINT, 0, len, (u8*)err_msg, &fallback_write);
     led_toggle(LED_RED);
     for (u32 d = 0; d < 5000000; d++)
       __asm__("nop");
