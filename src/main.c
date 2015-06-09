@@ -21,6 +21,7 @@
 #include <string.h>
 #include <libopencm3/cm3/scb.h>
 #include <libsbp/bootload.h>
+#include <libsbp/version.h>
 
 #include "main.h"
 #include "sbp.h"
@@ -79,8 +80,14 @@ void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 
 u32 send_handshake(void)
 {
-  return sbp_send_msg(SBP_MSG_BOOTLOADER_HANDSHAKE_DEVICE, strlen(git_commit),
-                      (u8 *)git_commit);
+  msg_bootloader_handshake_device_t handshake;
+  u32 flags = SBP_MAJOR_VERSION << 8 | SBP_MINOR_VERSION;
+  u8 buflen = sizeof(handshake) + strlen(git_commit)+1;
+
+  handshake.flags = flags;
+  strncpy(handshake.version, git_commit, strlen(git_commit)+1);
+
+  return sbp_send_msg(SBP_MSG_BOOTLOADER_HANDSHAKE_DEVICE, buflen, (u8 *)&handshake);
 }
 
 int main(void)
