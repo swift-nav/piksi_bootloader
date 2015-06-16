@@ -13,7 +13,7 @@
 #ifndef SWIFTNAV_USART_H
 #define SWIFTNAV_USART_H
 
-#include <libswiftnav/common.h>
+#include <libsbp/common.h>
 
 /** \addtogroup peripherals
  * \{ */

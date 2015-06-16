@@ -11,7 +11,7 @@
  */
 
 #include <string.h>
-#include <libswiftnav/sbp.h>
+#include <libsbp/flash.h>
 
 #include "sbp.h"
 #include "peripherals/stm_flash.h"
@@ -27,9 +27,9 @@
  *             - [0] Flash to program (see flash_callbacks.h for #defines)
  *             - [1] Flash sector number to erase (0-11)
  */
-void flash_erase_sector_callback(u16 sender_id, u8 len, u8 msg[])
+void flash_erase_sector_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 {
-  (void)sender_id; (void)len;
+  (void)sender_id; (void)len; (void)context;
 
   if (sender_id != 0x42)
     return;
@@ -53,7 +53,7 @@ void flash_erase_sector_callback(u16 sender_id, u8 len, u8 msg[])
     break;
   }
 
-  sbp_send_msg(MSG_FLASH_DONE, 1, &ret);
+  sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
 }
 
 /** Callback to program a set of addresses of either the STM or M25 flash.
@@ -71,9 +71,9 @@ void flash_erase_sector_callback(u16 sender_id, u8 len, u8 msg[])
  *                       from starting address
  *             - [6:end] Data to program addresses with
  */
-void flash_program_callback(u16 sender_id, u8 len, u8 msg[])
+void flash_program_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 {
-  (void)sender_id; (void)len;
+  (void)sender_id; (void)len; (void)context;
 
   if (sender_id != 0x42)
     return;
@@ -86,7 +86,7 @@ void flash_program_callback(u16 sender_id, u8 len, u8 msg[])
 
   if (length > FLASH_ADDRS_PER_OP) {
     ret = FLASH_INVALID_LEN;
-    sbp_send_msg(MSG_FLASH_DONE, 1, &ret);
+    sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
     return;
   }
 
@@ -104,11 +104,11 @@ void flash_program_callback(u16 sender_id, u8 len, u8 msg[])
     break;
   }
 
-  sbp_send_msg(MSG_FLASH_DONE, 1, &ret);
+  sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
 }
 
 /** Callback to read a set of addresses of either the STM or M25 flash.
- * Replies with a MSG_FLASH_READ message containing the read data on success or
+ * Replies with a MSG_FLASH_READ_DEVICE message containing the read data on success or
  * a MSG_FLASH_DONE message containing the return code FLASH_INVALID_LEN if the
  * maximum read size is exceeded or FLASH_INVALID_ADDR if the address is
  * outside of the allowed range.
@@ -119,9 +119,9 @@ void flash_program_callback(u16 sender_id, u8 len, u8 msg[])
  *             - [5]   Length of set of addresses to read - counts up from
  *                     starting address
  */
-void flash_read_callback(u16 sender_id, u8 len, u8 msg[])
+void flash_read_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 {
-  (void)sender_id; (void)len;
+  (void)sender_id; (void)len; (void)context;
 
   if (sender_id != 0x42)
     return;
@@ -140,7 +140,7 @@ void flash_read_callback(u16 sender_id, u8 len, u8 msg[])
 
   if (length > FLASH_ADDRS_PER_OP) {
     ret = FLASH_INVALID_LEN;
-    sbp_send_msg(MSG_FLASH_DONE, 1, &ret);
+    sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
     return;
   }
 
@@ -148,7 +148,7 @@ void flash_read_callback(u16 sender_id, u8 len, u8 msg[])
     if ((address < STM_FLASH_MIN_ADDR) ||
         (address+length-1 > STM_FLASH_MAX_ADDR)) {
       ret = FLASH_INVALID_ADDR;
-      sbp_send_msg(MSG_FLASH_DONE, 1, &ret);
+      sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
       return;
     }
   }
@@ -166,9 +166,9 @@ void flash_read_callback(u16 sender_id, u8 len, u8 msg[])
   }
 
   if (ret != 0)
-    sbp_send_msg(MSG_FLASH_DONE, 1, &ret);
+    sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
   else
-    sbp_send_msg(MSG_FLASH_READ, length + 5, callback_data);
+    sbp_send_msg(SBP_MSG_FLASH_READ_DEVICE, length + 5, callback_data);
 }
 
 /** Callback to write to the 8-bit M25 flash status register.
@@ -177,9 +177,9 @@ void flash_read_callback(u16 sender_id, u8 len, u8 msg[])
  * \param buff Array of u8 (length == 1) :
  *             - [0] Byte to write to the M25 flash status register.
  */
-void m25_flash_write_status_callback(u16 sender_id, u8 len, u8 msg[])
+void m25_flash_write_status_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 {
-  (void)sender_id; (void)len;
+  (void)sender_id; (void)len; (void)context;
 
   if (sender_id != 0x42)
     return;
@@ -189,7 +189,7 @@ void m25_flash_write_status_callback(u16 sender_id, u8 len, u8 msg[])
   m25_write_enable();
   m25_write_status(sr);
   m25_write_disable();
-  sbp_send_msg(MSG_FLASH_DONE, 1, &ret);
+  sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
 }
 
 /** Callback to unlock a sector of the STM flash memory.
@@ -198,9 +198,9 @@ void m25_flash_write_status_callback(u16 sender_id, u8 len, u8 msg[])
  * \param buff Array of u8 (length 1) :
  *             - [0] flash sector number to unlock.
  */
-void stm_flash_unlock_sector_callback(u16 sender_id, u8 len, u8 msg[])
+void stm_flash_unlock_sector_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 {
-  (void)sender_id; (void)len;
+  (void)sender_id; (void)len; (void)context;
 
   if (sender_id != 0x42)
     return;
@@ -208,7 +208,7 @@ void stm_flash_unlock_sector_callback(u16 sender_id, u8 len, u8 msg[])
   u8 ret;
   u8 sector = msg[0];
   ret = stm_flash_unlock_sector(sector);
-  sbp_send_msg(MSG_FLASH_DONE, 1, &ret);
+  sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
 }
 
 /** Callback to lock a sector of the STM flash memory.
@@ -217,9 +217,9 @@ void stm_flash_unlock_sector_callback(u16 sender_id, u8 len, u8 msg[])
  * \param buff Array of u8 (length 1) :
  *             - [0] Flash sector number to unlock.
  */
-void stm_flash_lock_sector_callback(u16 sender_id, u8 len, u8 msg[])
+void stm_flash_lock_sector_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 {
-  (void)sender_id; (void)len;
+  (void)sender_id; (void)len; (void)context;
 
   if (sender_id != 0x42)
     return;
@@ -227,7 +227,7 @@ void stm_flash_lock_sector_callback(u16 sender_id, u8 len, u8 msg[])
   u8 ret;
   u8 sector = msg[0];
   ret = stm_flash_lock_sector(sector);
-  sbp_send_msg(MSG_FLASH_DONE, 1, &ret);
+  sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
 }
 
 /** Set up flash callbacks. */
@@ -242,45 +242,24 @@ void flash_callbacks_register(void)
 
   static sbp_msg_callbacks_node_t m25_flash_write_status_node;
 
-  sbp_register_callback(MSG_FLASH_ERASE,
-                        &flash_erase_sector_callback,
-                        &flash_erase_sector_node);
-  sbp_register_callback(MSG_FLASH_READ,
-                        &flash_read_callback,
-                        &flash_read_node);
-  sbp_register_callback(MSG_FLASH_PROGRAM,
-                        &flash_program_callback,
-                        &flash_program_node);
+  sbp_register_cbk(SBP_MSG_FLASH_ERASE,
+                   &flash_erase_sector_callback,
+                   &flash_erase_sector_node);
+  sbp_register_cbk(SBP_MSG_FLASH_READ_HOST,
+                   &flash_read_callback,
+                   &flash_read_node);
+  sbp_register_cbk(SBP_MSG_FLASH_PROGRAM,
+                   &flash_program_callback,
+                   &flash_program_node);
 
-  sbp_register_callback(MSG_STM_FLASH_LOCK_SECTOR,
-                        &stm_flash_lock_sector_callback,
-                        &stm_flash_lock_sector_node);
-  sbp_register_callback(MSG_STM_FLASH_UNLOCK_SECTOR,
-                        &stm_flash_unlock_sector_callback,
-                        &stm_flash_unlock_sector_node);
+  sbp_register_cbk(SBP_MSG_STM_FLASH_LOCK_SECTOR,
+                   &stm_flash_lock_sector_callback,
+                   &stm_flash_lock_sector_node);
+  sbp_register_cbk(SBP_MSG_STM_FLASH_UNLOCK_SECTOR,
+                   &stm_flash_unlock_sector_callback,
+                   &stm_flash_unlock_sector_node);
 
-  sbp_register_callback(MSG_M25_FLASH_WRITE_STATUS,
-                        &m25_flash_write_status_callback,
-                        &m25_flash_write_status_node);
+  sbp_register_cbk(SBP_MSG_M25_FLASH_WRITE_STATUS,
+                   &m25_flash_write_status_callback,
+                   &m25_flash_write_status_node);
 }
-
-/** Callback to read STM32F4's hardcoded unique ID.
- * Sends STM32F4 unique ID (12 bytes) back to host.
- */
-void stm_unique_id_callback(u16 sender_id, u8 len, u8 msg[])
-{
-  (void)sender_id; (void)len; (void)msg;
-
-  sbp_send_msg(MSG_STM_UNIQUE_ID, 12, (u8*)STM_UNIQUE_ID_ADDR);
-}
-
-/** Register callback to read Device's Unique ID. */
-void stm_unique_id_callback_register(void)
-{
-  static sbp_msg_callbacks_node_t stm_unique_id_node;
-
-  sbp_register_callback(MSG_STM_UNIQUE_ID,
-                        &stm_unique_id_callback,
-                        &stm_unique_id_node);
-}
-

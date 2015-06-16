@@ -14,7 +14,7 @@
 #define SWIFTNAV_MAIN_H
 
 #include <libopencm3/stm32/f4/rcc.h>
-#include <libswiftnav/common.h>
+#include <libsbp/common.h>
 
 extern const clock_scale_t hse_16_368MHz_in_65_472MHz_out_3v3;
 extern const clock_scale_t hse_16_368MHz_in_130_944MHz_out_3v3;

@@ -13,7 +13,7 @@
 #ifndef SWIFTNAV_LEDS_H
 #define SWIFTNAV_LEDS_H
 
-#include <libswiftnav/common.h>
+#include <libsbp/common.h>
 
 /** \addtogroup leds
  * \{ */

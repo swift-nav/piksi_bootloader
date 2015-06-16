@@ -13,7 +13,7 @@
 #ifndef SWIFTNAV_SETTINGS_H
 #define SWIFTNAV_SETTINGS_H
 
-#include <libswiftnav/common.h>
+#include <libsbp/common.h>
 
 /** \addtogroup io
  * \{ */

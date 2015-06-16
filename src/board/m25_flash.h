@@ -14,7 +14,7 @@
 #ifndef SWIFTNAV_M25_FLASH_H
 #define SWIFTNAV_M25_FLASH_H
 
-#include <libswiftnav/common.h>
+#include <libsbp/common.h>
 
 /** \addtogroup m25
  * \{ */

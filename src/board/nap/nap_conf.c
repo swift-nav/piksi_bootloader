@@ -15,8 +15,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include <libswiftnav/common.h>
-#include <libswiftnav/constants.h>
+#include <libsbp/common.h>
 
 #include "../m25_flash.h"
 #include "nap_conf.h"
