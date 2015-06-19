@@ -108,7 +108,7 @@ void flash_program_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 }
 
 /** Callback to read a set of addresses of either the STM or M25 flash.
- * Replies with a MSG_FLASH_READ_DEVICE message containing the read data on success or
+ * Replies with a MSG_FLASH_READ_RESPONSE message containing the read data on success or
  * a MSG_FLASH_DONE message containing the return code FLASH_INVALID_LEN if the
  * maximum read size is exceeded or FLASH_INVALID_ADDR if the address is
  * outside of the allowed range.
@@ -168,7 +168,7 @@ void flash_read_callback(u16 sender_id, u8 len, u8 msg[], void* context)
   if (ret != 0)
     sbp_send_msg(SBP_MSG_FLASH_DONE, 1, &ret);
   else
-    sbp_send_msg(SBP_MSG_FLASH_READ_DEVICE, length + 5, callback_data);
+    sbp_send_msg(SBP_MSG_FLASH_READ_RESPONSE, length + 5, callback_data);
 }
 
 /** Callback to write to the 8-bit M25 flash status register.
@@ -245,7 +245,7 @@ void flash_callbacks_register(void)
   sbp_register_cbk(SBP_MSG_FLASH_ERASE,
                    &flash_erase_sector_callback,
                    &flash_erase_sector_node);
-  sbp_register_cbk(SBP_MSG_FLASH_READ_HOST,
+  sbp_register_cbk(SBP_MSG_FLASH_READ_REQUEST,
                    &flash_read_callback,
                    &flash_read_node);
   sbp_register_cbk(SBP_MSG_FLASH_PROGRAM,
