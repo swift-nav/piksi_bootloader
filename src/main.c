@@ -80,14 +80,14 @@ void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 
 u32 send_handshake(void)
 {
-  msg_bootloader_handshake_device_t handshake;
+  msg_bootloader_handshake_response_t handshake;
   u32 flags = SBP_MAJOR_VERSION << 8 | SBP_MINOR_VERSION;
   u8 buflen = sizeof(handshake) + strlen(git_commit)+1;
 
   handshake.flags = flags;
   strncpy(handshake.version, git_commit, strlen(git_commit)+1);
 
-  return sbp_send_msg(SBP_MSG_BOOTLOADER_HANDSHAKE_DEVICE, buflen, (u8 *)&handshake);
+  return sbp_send_msg(SBP_MSG_BOOTLOADER_HANDSHAKE_RESPONSE, buflen, (u8 *)&handshake);
 }
 
 int main(void)
@@ -116,7 +116,7 @@ int main(void)
 
   /* Add callback for host to tell bootloader it wants to load program. */
   static sbp_msg_callbacks_node_t receive_handshake_node;
-  sbp_register_cbk(SBP_MSG_BOOTLOADER_HANDSHAKE_HOST,&receive_handshake_callback,
+  sbp_register_cbk(SBP_MSG_BOOTLOADER_HANDSHAKE_REQUEST,&receive_handshake_callback,
                    &receive_handshake_node);
 
   /* Is current application we have in flash valid? Check this by seeing if
