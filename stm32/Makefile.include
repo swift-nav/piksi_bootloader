@@ -16,7 +16,7 @@
 
 SWIFTNAV_ROOT ?= ..
 PREFIX ?= arm-none-eabi
-GIT_COMMIT := $(shell git describe --dirty --tags --always)
+GIT_COMMIT := $(shell git describe --dirty --tags --always | xargs echo -n)
 # PREFIX ?= arm-elf
 CC = $(PREFIX)-gcc
 LD = $(PREFIX)-gcc
