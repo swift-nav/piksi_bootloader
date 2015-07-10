@@ -80,11 +80,13 @@ void receive_handshake_callback(u16 sender_id, u8 len, u8 msg[], void* context)
 
 u32 send_handshake(void)
 {
-  msg_bootloader_handshake_response_t handshake;
-  u32 flags = SBP_MAJOR_VERSION << 8 | SBP_MINOR_VERSION;
-  u8 buflen = sizeof(handshake) + strlen(git_commit)+1;
+  struct __attribute__((packed)) {
+    u32 flags;
+    char version[strlen(git_commit)];
+  } handshake;
+  u8 buflen = sizeof(handshake) + 1;
 
-  handshake.flags = flags;
+  handshake.flags = SBP_MAJOR_VERSION << 8 | SBP_MINOR_VERSION;
   strncpy(handshake.version, git_commit, strlen(git_commit)+1);
 
   return sbp_send_msg(SBP_MSG_BOOTLOADER_HANDSHAKE_RESPONSE, buflen, (u8 *)&handshake);
